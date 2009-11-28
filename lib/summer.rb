@@ -66,10 +66,9 @@ module Summer
       # Privmsgs
       elsif raw == "PRIVMSG"
         message = words[3..-1].join(" ").gsub(/^:/, '')
-        
         # Parse commands
-        if /^!(\w+)\s*(.*)/.match(message)
-          try("#{$1}_command".to_sym, parse_sender(sender), channel, $2)
+        if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
+g          try("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
           method = channel == me ? :did_receive_private_message : :did_receive_channel_message
