@@ -73,7 +73,7 @@ module Summer
         # Plain and boring message
         else
           method = channel == me ? :did_receive_private_message : :did_receive_channel_message
-          try(method, parse_sender(sender), channel, message)
+          try(method, parse_sender(sender), channel, message) if respond_to?(method)
         end
       end
     
