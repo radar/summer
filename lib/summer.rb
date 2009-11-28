@@ -85,7 +85,7 @@ g          try("#{$1}_command", parse_sender(sender), channel, $2)
     
     # These are the raws we care about.
     def raws_to_handle
-      ["422"]
+      ["422", "376"]
     end
     
     def privmsg(message, to)
