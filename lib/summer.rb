@@ -1,7 +1,6 @@
 require 'socket'
 require 'yaml'
 require 'active_support'
-require 'active_record'
 
 require File.dirname(__FILE__) + "/summer/handlers"
 
