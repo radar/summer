@@ -9,7 +9,7 @@ module Summer
   class Connection
     include Handlers
     attr_accessor :connection, :ready, :started, :config
-    def initialize(server, port)
+    def initialize(server, port=6667)
       
       # Ready is set when the bot receives the end of the MOTD, or missing MOTD message
       @ready = false
