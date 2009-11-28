@@ -37,6 +37,7 @@ module Summer
         join(channel)
       end
       @started = true
+      try(:did_start_up)
     end
     
     # Go somewhere.
