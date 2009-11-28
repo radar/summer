@@ -32,7 +32,6 @@ module Summer
     
     # Will join channels specified in configuration.
     def startup!
-      p @config
       (@config[:channels] << @config[:channel]).compact.each do |channel|
         join(channel)
       end
