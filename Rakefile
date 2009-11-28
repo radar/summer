@@ -4,13 +4,15 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "summer2"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.name = "summer"
+    gem.summary = %Q{Tiny IRC Bot Framework}
+    gem.description = %Q{Tiny IRC Bot Frameowkr}
     gem.email = "radarlistener@gmail.com"
-    gem.homepage = "http://github.com/radar/summer2"
+    gem.homepage = "http://github.com/radar/summer"
     gem.authors = ["Ryan Bigg"]
-    gem.add_development_dependency "thoughtbot-shoulda"
+    # gem.add_dependency("activerecord", ">= 2.3.5")
+    # gem.add_dependency("activesupport", ">= 2.3.5")
+    gem.files = Dir["lib/**/*.rb"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
@@ -49,8 +51,7 @@ Rake::RDocTask.new do |rdoc|
     version = ""
   end
 
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "summer2 #{version}"
+  rdoc.title = "summer #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
