@@ -1,6 +1,6 @@
 # Summer
 
-Summer is an IRC Bot "framework" "inspired" by [http://github.com/RISCFuture/autumn](Autumn). It's goal is to be tiny.
+Summer is an IRC Bot "framework" "inspired" by [http://github.com/RISCFuture/autumn](Autumn). Its goal is to be tiny.
 
 ## Installation
 
