@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.description = %q{Tiny IRC Bot Frameowkr}
   s.email = %q{radarlistener@gmail.com}
   s.extra_rdoc_files = [
-    "LICENSE"
+    "LICENSE",
+     "README.markdown"
   ]
   s.files = [
     "lib/summer.rb",
