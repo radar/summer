@@ -44,6 +44,11 @@ module Summer
       response("JOIN #{channel}")
     end
     
+    # Leave somewhere
+    def part(channel)
+      response("PART #{channel}")
+    end
+    
     
     # What did they say?
     def parse(message)
