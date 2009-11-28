@@ -88,6 +88,10 @@ module Summer
     def raws_to_handle
       ["422"]
     end
+    
+    def privmsg(message, to)
+      response("PRIVMSG #{to} :#{message}")
+    end
      
     # Output something to the console and to the socket.
     def response(message)
