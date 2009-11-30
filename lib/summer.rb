@@ -2,6 +2,8 @@ require 'socket'
 require 'yaml'
 require 'active_support'
 
+Dir[File.dirname(__FILE__) + '/ext/*.rb'].each { |f| require f }
+
 require File.dirname(__FILE__) + "/summer/handlers"
 
 module Summer
@@ -45,7 +47,7 @@ module Summer
         join(channel)
       end
       @started = true
-      try(:did_start_up)
+      call(:did_start_up) if respond_to?(:did_start_up)
     end
 
     # Go somewhere.
@@ -77,12 +79,21 @@ module Summer
         message = words[3..-1].join(" ").gsub(/^:/, '')
         # Parse commands
         if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
-          try("#{$1}_command", parse_sender(sender), channel, $2)
+          call("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
           method = channel == me ? :did_receive_private_message : :did_receive_channel_message
-          try(method, parse_sender(sender), channel, message) if respond_to?(method)
+          call(method, parse_sender(sender), channel, message)
         end
+      # Joins
+      elsif raw == "JOIN"
+        call(:did_join_channel, parse_sender(sender), channel)
+      elsif raw == "PART"
+        call(:did_part_channel, parse_sender(sender), channel)
+      elsif raw == "QUIT"
+        call(:did_quit_server, parse_sender(sender))
+      elsif raw == "KICK"
+        call(:did_kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
       end
 
     end
