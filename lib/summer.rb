@@ -76,7 +76,7 @@ module Summer
         send("handle_#{raw}", message) if raws_to_handle.include?(raw)
       # Privmsgs
       elsif raw == "PRIVMSG"
-        message = words[3..-1].join(" ").gsub(/^:/, '')
+        message = words[3..-1].clean
         # Parse commands
         if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
           call("#{$1}_command", parse_sender(sender), channel, $2)
@@ -100,7 +100,7 @@ module Summer
 
     def parse_sender(sender)
       nick, hostname = sender.split("!")
-      { :nick => nick.gsub(/^:/, ''), :hostname => hostname }
+      { :nick => nick.clean, :hostname => hostname }
     end
 
     # These are the raws we care about.
