@@ -82,18 +82,18 @@ module Summer
           call("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
-          method = channel == me ? :did_receive_private_message : :did_receive_channel_message
+          method = channel == me ? :private_message : :channel_message
           call(method, parse_sender(sender), channel, message)
         end
       # Joins
       elsif raw == "JOIN"
-        call(:did_join_channel, parse_sender(sender), channel)
+        call(:join, parse_sender(sender), channel)
       elsif raw == "PART"
-        call(:did_part_channel, parse_sender(sender), channel)
+        call(:part, parse_sender(sender), channel, words[3..-1].clean)
       elsif raw == "QUIT"
-        call(:did_quit_server, parse_sender(sender))
+        call(:quit, parse_sender(sender), words[2..-1].clean)
       elsif raw == "KICK"
-        call(:did_kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        call(:kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
       end
 
     end
