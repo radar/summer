@@ -7,29 +7,38 @@ require File.dirname(__FILE__) + "/summer/handlers"
 module Summer
   class Connection
     include Handlers
-    attr_accessor :connection, :ready, :started, :config
-    def initialize(server, port=6667)
-      
-      # Ready is set when the bot receives the end of the MOTD, or missing MOTD message
+    attr_accessor :connection, :ready, :started, :config, :server, :port
+    def initialize(server, port=6667, dry=false)
       @ready = false
-      
-      # Started is set when +startup+ completes.
       @started = false
+
+      @server = server
+      @port = port
+
+      load_config
+      connect!
       
-      @config = HashWithIndifferentAccess.new(YAML::load_file(File.dirname($0) + "/config/summer.yml"))
-      
-      @connection = TCPSocket.open(server, port)
-      
-      @connection.puts("USER #{config[:nick]} #{config[:nick]} #{config[:nick]} #{config[:nick]}")
-      @connection.puts("NICK #{config[:nick]}")
-      loop do
-        startup! if @ready && !@started
-        parse(@connection.gets)
+      unless dry
+        loop do
+          startup! if @ready && !@started
+          parse(@connection.gets)
+        end
       end
     end
-    
+
     private
-    
+
+    def load_config
+      @config = HashWithIndifferentAccess.new(YAML::load_file(File.dirname($0) + "/config/summer.yml"))
+    end
+
+    def connect!
+      @connection = TCPSocket.open(server, port)      
+      response("USER #{config[:nick]} #{config[:nick]} #{config[:nick]} #{config[:nick]}")
+      response("NICK #{config[:nick]}")
+    end
+
+
     # Will join channels specified in configuration.
     def startup!
       (@config[:channels] << @config[:channel]).compact.each do |channel|
@@ -38,18 +47,18 @@ module Summer
       @started = true
       try(:did_start_up)
     end
-    
+
     # Go somewhere.
     def join(channel)
       response("JOIN #{channel}")
     end
-    
+
     # Leave somewhere
     def part(channel)
       response("PART #{channel}")
     end
-    
-    
+
+
     # What did they say?
     def parse(message)
       puts "<< #{message.strip}"
@@ -75,33 +84,33 @@ module Summer
           try(method, parse_sender(sender), channel, message) if respond_to?(method)
         end
       end
-    
+
     end
-    
+
     def parse_sender(sender)
       nick, hostname = sender.split("!")
       { :nick => nick.gsub(/^:/, ''), :hostname => hostname }
     end
-    
+
     # These are the raws we care about.
     def raws_to_handle
       ["422", "376"]
     end
-    
+
     def privmsg(message, to)
       response("PRIVMSG #{to} :#{message}")
     end
-     
+
     # Output something to the console and to the socket.
     def response(message)
       puts ">> #{message.strip}"
       @connection.puts(message)
     end
-    
+
     def me
       config[:nick]
     end
-    
+
   end
-  
+
 end
