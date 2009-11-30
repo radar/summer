@@ -4,13 +4,8 @@ Summer is an IRC Bot "framework" "inspired" by [http://github.com/RISCFuture/aut
 
 ## Installation
 
-You need to have gemcutter.org in your sources.
-
-Installation is as simple as:
-
-    sudo gem install summer
-
-Or you could clone the project and run `rake install`
+The project is currently in "preview" state 'cause that's all the rage nowadays. No there's no invites, BUT everybody gets access to it.
+Sorry to inform you that you'll have to clone it and then run `rake install` if you want to use it.
 
 ## Usage
 
@@ -24,6 +19,8 @@ To use summer, create a file like this:
     end
 
     Bot.new("localhost")
+    
+Running it will make your bot attempt to connect to the server on localhost. For those of you who do not have an IRC server running locally, I would suggest trying irc.freenode.net instead. 
     
 ## Configuration
 
@@ -89,4 +86,10 @@ message (`String`): The message that was received.
 ## Handling raw messages
 
 If you wish to handle raw messages that come into your bot you can define a `handle_xxx` method for that where `xxx` is the three-digit representation of the raw you wish to handle.
+
+
+### Upcoming
+
+`mode` method to detect mode changes
+Auto-rejoin after kick (configuration options)
 
