@@ -94,6 +94,7 @@ module Summer
         call(:quit, parse_sender(sender), words[2..-1].clean)
       elsif raw == "KICK"
         call(:kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        join(channel) if words[3] == me && config[:auto_rejoin]
       elsif raw == "MODE"
         call(:mode, parse_sender(sender), channel, words[3], words[4..-1].clean)
       end

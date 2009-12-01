@@ -29,6 +29,7 @@ In the same directory create a directory called _config_ and in that put _summer
 * nick: The nickname of the bot.
 * channel: A channel to join on startup.
 * channels: Channels to join on startup.
+* auto_rejoin: Set this to true if you want the bot to re-join any channel it's kicked from.
 
 ## `did_start_up`
 
