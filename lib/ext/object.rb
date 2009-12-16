@@ -1,5 +1,5 @@
 class Object
-  def call(method, *args)
+  def really_try(method, *args)
     try(method, *args) if respond_to?(method)
   end
 end

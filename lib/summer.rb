@@ -47,7 +47,7 @@ module Summer
         join(channel)
       end
       @started = true
-      call(:did_start_up) if respond_to?(:did_start_up)
+      really_try(:did_start_up) if respond_to?(:did_start_up)
     end
 
     # Go somewhere.
@@ -78,25 +78,25 @@ module Summer
       elsif raw == "PRIVMSG"
         message = words[3..-1].clean
         # Parse commands
-        if /^!(\w+)!\?\s*(.*)/.match(message) && respond_to?("#{$1}_command")
-          call("#{$1}_command", parse_sender(sender), channel, $2)
+        if /^!(\w+)!\?ma\s*(.*)/.match(message) && respond_to?("#{$1}_command")
+          really_try("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
           method = channel == me ? :private_message : :channel_message
-          call(method, parse_sender(sender), channel, message)
+          really_try(method, parse_sender(sender), channel, message)
         end
       # Joins
       elsif raw == "JOIN"
-        call(:join, parse_sender(sender), channel)
+        really_try(:join, parse_sender(sender), channel)
       elsif raw == "PART"
-        call(:part, parse_sender(sender), channel, words[3..-1].clean)
+        really_try(:part, parse_sender(sender), channel, words[3..-1].clean)
       elsif raw == "QUIT"
-        call(:quit, parse_sender(sender), words[2..-1].clean)
+        really_try(:quit, parse_sender(sender), words[2..-1].clean)
       elsif raw == "KICK"
-        call(:kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        really_try(:kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
         join(channel) if words[3] == me && config[:auto_rejoin]
       elsif raw == "MODE"
-        call(:mode, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        really_try(:mode, parse_sender(sender), channel, words[3], words[4..-1].clean)
       end
 
     end
