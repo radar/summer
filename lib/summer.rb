@@ -78,7 +78,7 @@ module Summer
       elsif raw == "PRIVMSG"
         message = words[3..-1].clean
         # Parse commands
-        if /^!(\w+)!\?\s*(.*)/.match(message) && respond_to?("#{$1}_command")
+        if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
           really_try("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
