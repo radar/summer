@@ -63,7 +63,7 @@ module Summer
 
     # What did they say?
     def parse(message)
-      puts "<< #{message.strip}"
+      puts "<< #{message.to_s.strip}"
       words = message.split(" ")
       sender = words[0]
       raw = words[1]
