@@ -65,7 +65,6 @@ module Summer
       response("PART #{channel}")
     end
 
-
     # What did they say?
     def parse(message)
       puts "<< #{message.to_s.strip}"
@@ -87,8 +86,9 @@ module Summer
           really_try("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
-          method = channel == me ? :private_message : :channel_message
-          really_try(method, parse_sender(sender), channel, message)
+          sender = parse_sender(sender)
+          method, channel = channel == me ? [:private_message, sender[:nick]]  : [:channel_message, channel]
+          really_try(method, sender, channel, message)
         end
       # Joins
       elsif raw == "JOIN"
