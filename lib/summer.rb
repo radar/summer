@@ -129,6 +129,10 @@ module Summer
     def me
       config[:nick]
     end
+    
+    def log(message)
+      File.open(config[:log_file]) { |file| file.write(message) } if config[:log_file]
+    end
 
   end
 
