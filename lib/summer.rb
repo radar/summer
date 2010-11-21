@@ -1,6 +1,7 @@
 require 'socket'
 require 'yaml'
-require 'active_support'
+require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/object/try'
 
 Dir[File.dirname(__FILE__) + '/ext/*.rb'].each { |f| require f }
 
