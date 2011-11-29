@@ -83,8 +83,9 @@ module Summer
       # Privmsgs
       elsif raw == "PRIVMSG"
         spam_protection(parse_sender(sender))
-        if @talkers.empty?
-          clean_spammers
+        @thread ||= Thread.new {}
+        unless thead.alive?
+          @thread = Thread.new { clean_spammers }
         end
         message = words[3..-1].clean
         # Parse commands
@@ -111,7 +112,7 @@ module Summer
       end
 
     end
-    
+
     def spam_protection(sender)
       if @talkers[sender]
         @talkers[sender] += 1
@@ -119,19 +120,21 @@ module Summer
         @talkers[sender] = 1
       end
     end
-    
+
     def clean_spammers
-      @talkers.each_key do |key|
-        if @talkers[key] < 1
-          @talkers.delete(key)
-        else
-          @talkers[key] -= 1
+      while !@talkers.empty?
+        @talkers.each_key do |key|
+          if @talkers[key] < 1
+            @talkers.delete(key)
+          else
+            @talkers[key] -= 1
+          end
+        end
+        unless @talkers.empty?
+          sleep 10
         end
       end
-      unless @talkers.empty?
-        sleep 10
-        clean_spammer
-      end
+      @thread.exit
     end
     def parse_sender(sender)
       nick, hostname = sender.split("!")
