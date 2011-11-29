@@ -17,6 +17,7 @@ module Summer
 
       @server = server
       @port = port
+      @talkers = {}
 
       load_config
       connect!
@@ -81,6 +82,10 @@ module Summer
         send("handle_#{raw}", message) if raws_to_handle.include?(raw)
       # Privmsgs
       elsif raw == "PRIVMSG"
+        spam_protection(parse_sender(sender))
+        if @talkers.empty?
+          clean_spammers
+        end
         message = words[3..-1].clean
         # Parse commands
         if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
@@ -106,7 +111,28 @@ module Summer
       end
 
     end
-
+    
+    def spam_protection(sender)
+      if @talkers[sender]
+        @talkers[sender] += 1
+      else
+        @talkers[sender] = 1
+      end
+    end
+    
+    def clean_spammers
+      @talkers.each_key do |key|
+        if @talkers[key] < 1
+          @talkers.delete(key)
+        else
+          @talkers[key] -= 1
+        end
+      end
+      unless @talkers.empty?
+        sleep 10
+        clean_spammer
+      end
+    end
     def parse_sender(sender)
       nick, hostname = sender.split("!")
       { :nick => nick.clean, :hostname => hostname }
@@ -136,5 +162,4 @@ module Summer
     end
 
   end
-
 end
