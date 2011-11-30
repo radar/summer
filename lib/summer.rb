@@ -124,7 +124,7 @@ module Summer
     def spam_protection(sender, channel)
       if @talkers[sender]
         if @talkers[sender] == 10
-          really_try("q_command", parse_sender(sender), channel)
+          really_try("say_command", parse_sender(sender), channel, "#{channel} #{parse_sender(sender)[:nick]}: You're about to get silenced sucka")
           @talkers[sender] += 1
         elsif @talkers[sender] > 11
           quiet(channel, parse_sender(sender)[:nick])
