@@ -67,6 +67,14 @@ module Summer
       response("PART #{channel}")
     end
 
+    def quiet(channel, nick, add=true)
+      if add
+        response("MODE #{channel} +q #{nick}")
+      else
+        response("MODE #{channel} -q #{nick}")
+      end
+    end
+
     # What did they say?
     def parse(message)
       puts "<< #{message.to_s.strip}"
@@ -82,9 +90,9 @@ module Summer
         send("handle_#{raw}", message) if raws_to_handle.include?(raw)
       # Privmsgs
       elsif raw == "PRIVMSG"
-        spam_protection(parse_sender(sender))
+        spam_protection(sender, channel)
         @thread ||= Thread.new {}
-        unless thead.alive?
+        unless @thread.alive?
           @thread = Thread.new { clean_spammers }
         end
         message = words[3..-1].clean
@@ -113,9 +121,16 @@ module Summer
 
     end
 
-    def spam_protection(sender)
+    def spam_protection(sender, channel)
       if @talkers[sender]
-        @talkers[sender] += 1
+        if @talkers[sender] == 10
+          really_try("q_command", parse_sender(sender), channel)
+          @talkers[sender] += 1
+        elsif @talkers[sender] > 11
+          quiet(channel, parse_sender(sender)[:nick])
+        else
+          @talkers[sender] += 1
+        end
       else
         @talkers[sender] = 1
       end
@@ -125,6 +140,7 @@ module Summer
       while !@talkers.empty?
         @talkers.each_key do |key|
           if @talkers[key] < 1
+            quiet("#austinbv", parse_sender(key)[:nick], false)
             @talkers.delete(key)
           else
             @talkers[key] -= 1
