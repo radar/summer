@@ -19,7 +19,7 @@ To use summer, create a file like this:
     end
 
     Bot.new("localhost")
-    
+
 Running it will make your bot attempt to connect to the server on localhost. For those of you who do not have an IRC server running locally, I would suggest trying irc.freenode.net instead. 
     
 ## Configuration
@@ -30,6 +30,7 @@ In the same directory create a directory called _config_ and in that put _summer
 * channel: A channel to join on startup.
 * channels: Channels to join on startup.
 * auto_rejoin: Set this to true if you want the bot to re-join any channel it's kicked from.
+* nickserv_password: Password to send to nickserv after connection but before joining any channels
 
 ## `did_start_up`
 
