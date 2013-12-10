@@ -22,6 +22,7 @@ module Summer
       trap(:INT) do
         puts "Shutting down..."
         FileUtils.rm_rf(pid_file)
+        exit
       end
 
       trap(:HUP) do
