@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
      "examples/light.rb"
   ]
 
-  s.add_dependency 'active_support', '~> 4.0'
+  s.add_dependency 'activesupport', '>= 3'
 
 end
 
