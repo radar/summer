@@ -1,4 +1,5 @@
 require 'socket'
+require 'fileutils'
 require 'yaml'
 require 'active_support/hash_with_indifferent_access'
 require 'active_support/core_ext/object/try'
@@ -18,7 +19,21 @@ module Summer
       @server = server
       @port = port
 
+      trap(:INT) do
+        puts "Shutting down..."
+        FileUtils.rm_r(pid_file)
+      end
+
+      trap(:HUP) do
+        puts "Restarting..."
+        FileUtils.rm_r(pid_file)
+        exec "/usr/bin/env ruby #{$0} #{ARGV[0]}"
+      end
+
       load_config
+      File.open(pid_file, "w+") do |f|
+        f.write Process.pid
+      end
       connect!
       
       unless dry
@@ -44,11 +59,26 @@ module Summer
 
     # Will join channels specified in configuration.
     def startup!
-      (@config[:channels] << @config[:channel]).compact.each do |channel|
-        join(channel)
-      end
       @started = true
       really_try(:did_start_up) if respond_to?(:did_start_up)
+      
+      if config['nickserv_password']
+        privmsg("identify #{config['nickserv_password']}", "nickserv")
+        # Wait 10 seconds for nickserv to get back to us.
+        Thread.new do
+          sleep(10)
+          finalize_startup
+        end
+      else
+        finalize_startup
+      end
+    end
+
+    def finalize_startup
+      config[:channels] ||= []
+      (config[:channels] << config[:channel]).compact.each do |channel|
+        join(channel)
+      end
     end
 
     # Go somewhere.
@@ -102,6 +132,12 @@ module Summer
 
     end
 
+    def private_message(sender, channel, message)
+      if sender[:nick].downcase == 'nickserv'
+        binding.pry
+      end
+    end
+
     def parse_sender(sender)
       nick, hostname = sender.split("!")
       { :nick => nick.clean, :hostname => hostname }
@@ -128,6 +164,14 @@ module Summer
     
     def log(message)
       File.open(config[:log_file]) { |file| file.write(message) } if config[:log_file]
+    end
+
+    def pid_file
+      "/tmp/summer-#{config[:nick]}.pid"
+    end
+
+    def nickserv_authed?
+      @nickserv_authed
     end
 
   end
