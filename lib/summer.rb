@@ -21,12 +21,12 @@ module Summer
 
       trap(:INT) do
         puts "Shutting down..."
-        FileUtils.rm_r(pid_file)
+        FileUtils.rm_rf(pid_file)
       end
 
       trap(:HUP) do
         puts "Restarting..."
-        FileUtils.rm_r(pid_file)
+        FileUtils.rm_rf(pid_file)
         exec "/usr/bin/env ruby #{$0} #{ARGV[0]}"
       end
 
