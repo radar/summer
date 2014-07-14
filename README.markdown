@@ -88,8 +88,3 @@ Called when someone is kicked from a channel.
 
 If you wish to handle raw messages that come into your bot you can define a `handle_xxx` method for that where `xxx` is the three-digit representation of the raw you wish to handle.
 
-### Imaginary features
-
-* `mode` method to detect mode changes
-* Auto-rejoin after kick (configuration options)
-
