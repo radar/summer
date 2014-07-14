@@ -83,6 +83,14 @@ Called when someone is kicked from a channel.
 * victim (`String`): Just the nick of whoever was kicked.
 * message (`String`): The message that was received.
 
+## `mode(user, channel, mode, extra_parts)`
+
+Called when a mode in a channel changes.
+
+* User (`Hash`): Contains `nick` and `hostname`.
+* channel (`String`): The channel name: e.g. "#logga"
+* mode (`String`): The mode that was set/unset.
+* extra_parts (`String`): The extra parts after the mode set/unset (if any).
 
 ## Handling raw messages
 
