@@ -140,7 +140,7 @@ module Summer
 
     # These are the raws we care about.
     def raws_to_handle
-      ["422", "376"]
+      ["422", "376", "433"]
     end
 
     def privmsg(message, to)
@@ -167,6 +167,11 @@ module Summer
 
     def nickserv_authed?
       @nickserv_authed
+    end
+
+    # Nickname in use
+    def handle_433(message)
+      response("NICK #{config[:alternate_nick]}") if config[:alternate_nick].present?
     end
 
   end
