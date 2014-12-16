@@ -133,12 +133,6 @@ module Summer
 
     end
 
-    def private_message(sender, channel, message)
-      if sender[:nick].downcase == 'nickserv'
-        binding.pry
-      end
-    end
-
     def parse_sender(sender)
       nick, hostname = sender.split("!")
       { :nick => nick.clean, :hostname => hostname }
