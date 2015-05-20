@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/ext/array.rb",
-     "lib/ext/object.rb",
      "lib/ext/string.rb",
      "lib/summer.rb",
      "lib/summer/handlers.rb"
