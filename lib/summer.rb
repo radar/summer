@@ -61,7 +61,7 @@ module Summer
     # Will join channels specified in configuration.
     def startup!
       @started = true
-      really_try(:did_start_up) if respond_to?(:did_start_up)
+      try(:did_start_up)
 
       if config['nickserv_password']
         privmsg("identify #{config['nickserv_password']}", "nickserv")
@@ -110,25 +110,25 @@ module Summer
         message = words[3..-1].clean
         # Parse commands
         if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
-          really_try("#{$1}_command", parse_sender(sender), channel, $2)
+          try("#{$1}_command", parse_sender(sender), channel, $2)
         # Plain and boring message
         else
           sender = parse_sender(sender)
           method, channel = channel == me ? [:private_message, sender[:nick]]  : [:channel_message, channel]
-          really_try(method, sender, channel, message)
+          try(method, sender, channel, message)
         end
       # Joins
       elsif raw == "JOIN"
-        really_try(:join, parse_sender(sender), channel)
+        try(:join_event, parse_sender(sender), channel)
       elsif raw == "PART"
-        really_try(:part, parse_sender(sender), channel, words[3..-1].clean)
+        try(:part_event, parse_sender(sender), channel, words[3..-1].clean)
       elsif raw == "QUIT"
-        really_try(:quit, parse_sender(sender), words[2..-1].clean)
+        try(:quit_event, parse_sender(sender), words[2..-1].clean)
       elsif raw == "KICK"
-        really_try(:kick, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        try(:kick_event, parse_sender(sender), channel, words[3], words[4..-1].clean)
         join(channel) if words[3] == me && config[:auto_rejoin]
       elsif raw == "MODE"
-        really_try(:mode, parse_sender(sender), channel, words[3], words[4..-1].clean)
+        try(:mode_event, parse_sender(sender), channel, words[3], words[4..-1].clean)
       end
 
     end
