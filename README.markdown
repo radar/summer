@@ -98,3 +98,42 @@ Called when a mode in a channel changes.
 
 If you wish to handle raw messages that come into your bot you can define a `handle_xxx` method for that where `xxx` is the three-digit representation of the raw you wish to handle.
 
+## Using with Slack
+
+Slack is becoming more and more popular; though many of us still like our IRC & IRC bots. The good thing is [Slack offers an IRC and XMPP gateway!](https://slack.zendesk.com/hc/en-us/articles/201727913-Connecting-to-Slack-over-IRC-and-XMPP)
+
+Setting up summer to connect to slack is quite simple:
+
+### 1. Configure your slack channel to use IRC
+
+Your Slack team's **owner** will first need to enable team-wide gateway access at `my-channel.slack.com/admin/settings`, in the Gateways section under the Permissions tab. It must be an **owner**, not just an admin.
+
+### 2. Obtain credentials for your bot to access the slack IRC channel
+
+Once the gateway is enabled, your bot (and other team members) can get connection instructions and their unique gateway password at: `my-channel.slack.com/account/gateways`.
+
+
+
+| Name | Value |
+----- | -----
+| Host | my-channel.irc.slack.com |
+| User | my-nick |
+| Pass | my-pass |
+
+### 3. Configure summer to use the server password & ssl
+
+In your config/summer.yml file, add your credentials:
+
+```
+nick:              ENV['NICK']
+use_ssl:           true
+server_password:   ENV['SERVER_PASS']
+channels:          ['general', 'random']
+```
+
+Then start your bot per usual:
+
+`
+Bot.new(ENV['IRC_SERVER'])
+`
+
