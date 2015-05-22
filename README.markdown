@@ -26,13 +26,14 @@ Running it will make your bot attempt to connect to the server on localhost. For
 
 In the same directory create a directory called _config_ and in that put _summer.yml_ which can have the following keys:
 
-* nick: The nickname of the bot.
-* channel: A channel to join on startup.
-* channels: Channels to join on startup.
-* auto_rejoin: Set this to true if you want the bot to re-join any channel it's kicked from.
-* nickserv_password: Password to send to nickserv after connection but before joining any channels
-* server_password: Password to authenticate with a server the irc server requires it.
+* server: The IRC server url the bot will connect to. Can also be passed in to the initializer as the first argument.
 * use_ssl: `true` or `false` defaults to `false`. If an IRC server requires SSL, it will establish the connection
+* nick: The nickname of the bot.
+* server_password: Password to authenticate with a server, if the irc server requires it.
+* nickserv_password: Password to send to nickserv after connection but before joining any channels
+* channel: A channel to join on startup.
+* channels: Channels to join on startup. e.g. `['RubyOnRails', 'ruby']`
+* auto_rejoin: Set this to `true` if you want the bot to re-join any channel it's kicked from.
 
 ## `did_start_up`
 

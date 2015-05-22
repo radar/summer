@@ -13,7 +13,7 @@ module Summer
   class Connection
     include Handlers
     attr_accessor :connection, :ready, :started, :config, :server, :port
-    def initialize(server, port=6667, dry=false)
+    def initialize(server=nil, port=6667, dry=false)
       @ready = false
       @started = false
 
@@ -33,9 +33,12 @@ module Summer
       end
 
       load_config
+      @server = config[:server] if server.nil?
+
       File.open(pid_file, "w+") do |f|
         f.write Process.pid
       end
+
       connect!
 
       unless dry
