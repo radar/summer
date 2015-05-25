@@ -35,11 +35,15 @@ In the same directory create a directory called _config_ and in that put _summer
 * channels: Channels to join on startup. e.g. `['RubyOnRails', 'ruby']`
 * auto_rejoin: Set this to `true` if you want the bot to re-join any channel it's kicked from.
 
-## `did_start_up`
+## API
+
+The following are some methods you can define in your class which inherits from `Summer::Connection`.
+
+### `did_start_up`
 
 Called when the bot has received the final MOTD line (376 or 422) and has finished joining all the channels.
 
-## `channel_message(sender, channel, message)`
+### `channel_message(sender, channel, message)`
 
 Called when the bot receives a channel message.
 
@@ -47,7 +51,7 @@ Called when the bot receives a channel message.
 * channel (`String`): The channel name: e.g. "#logga"
 * message (`String`): The message that was received
 
-## `private_message(sender, bot, message)`
+### `private_message(sender, bot, message)`
 
 Called when the bot receives a private message.
 
@@ -55,14 +59,14 @@ Called when the bot receives a private message.
 * bot (`String`): The bot's name.
 * message (`String`): The message that was received
 
-## `join(sender, channel)`
+### `join_event(sender, channel)`
 
 Called when the bot sees someone join a channel.
 
 * sender (`Hash`): Contains `nick` and `hostname`
 * channel (`String`): The channel name: e.g. "#logga"
 
-## `part(sender, channel, message)`
+### `part_event(sender, channel, message)`
 
 Called when someone parts a channel.
 
@@ -70,14 +74,14 @@ Called when someone parts a channel.
 * channel (`String`): The channel name: e.g. "#logga"
 * message (`String`): The message that was received
 
-## `quit(sender, message)`
+### `quit_event(sender, message)`
 
 Called when someone quits the server.
 
 * sender (`Hash`): Contains `nick` and `hostname`
 * message (`String`): The message that was received.
 
-## `kick(kicker, channel, victim, message)`
+### `kick_event(kicker, channel, victim, message)`
 
 Called when someone is kicked from a channel.
 
@@ -86,7 +90,7 @@ Called when someone is kicked from a channel.
 * victim (`String`): Just the nick of whoever was kicked.
 * message (`String`): The message that was received.
 
-## `mode(user, channel, mode, extra_parts)`
+### `mode_event(user, channel, mode, extra_parts)`
 
 Called when a mode in a channel changes.
 
