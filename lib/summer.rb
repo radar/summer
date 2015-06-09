@@ -19,6 +19,7 @@ module Summer
 
       @server = server
       @port = port
+      @talkers = {}
 
       trap(:INT) do
         puts "Shutting down..."
@@ -98,6 +99,14 @@ module Summer
       response("PART #{channel}")
     end
 
+    def quiet(channel, nick, add=true)
+      if add
+        response("MODE #{channel} +q #{nick}")
+      else
+        response("MODE #{channel} -q #{nick}")
+      end
+    end
+
     # What did they say?
     def parse(message)
       puts "<< #{message.to_s.strip}"
@@ -113,6 +122,11 @@ module Summer
         send("handle_#{raw}", message) if raws_to_handle.include?(raw)
       # Privmsgs
       elsif raw == "PRIVMSG"
+        spam_protection(sender, channel)
+        @thread ||= Thread.new {}
+        unless @thread.alive?
+          @thread = Thread.new { clean_spammers }
+        end
         message = words[3..-1].clean
         # Parse commands
         if /^!(\w+)\s*(.*)/.match(message) && respond_to?("#{$1}_command")
@@ -139,6 +153,37 @@ module Summer
 
     end
 
+    def spam_protection(sender, channel)
+      if @talkers[sender]
+        if @talkers[sender] == 10
+          really_try("say_command", parse_sender(sender), channel, "#{channel} #{parse_sender(sender)[:nick]}: You're about to get silenced sucka")
+          @talkers[sender] += 1
+        elsif @talkers[sender] > 11
+          quiet(channel, parse_sender(sender)[:nick])
+        else
+          @talkers[sender] += 1
+        end
+      else
+        @talkers[sender] = 1
+      end
+    end
+
+    def clean_spammers
+      while !@talkers.empty?
+        @talkers.each_key do |key|
+          if @talkers[key] < 1
+            quiet("#austinbv", parse_sender(key)[:nick], false)
+            @talkers.delete(key)
+          else
+            @talkers[key] -= 1
+          end
+        end
+        unless @talkers.empty?
+          sleep 10
+        end
+      end
+      @thread.exit
+    end
     def parse_sender(sender)
       nick, hostname = sender.split("!")
       { :nick => nick.clean, :hostname => hostname }
@@ -181,5 +226,4 @@ module Summer
     end
 
   end
-
 end
