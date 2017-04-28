@@ -149,7 +149,7 @@ module Summer
       ["422", "376", "433"]
     end
 
-    def privmsg(message, to)
+    def privmsg(to, message)
       response("PRIVMSG #{to} :#{message}")
     end
 
