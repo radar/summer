@@ -98,6 +98,10 @@ module Summer
       response("PART #{channel}")
     end
 
+    def quit(message="")
+      response("QUIT #{message}")
+    end
+
     # What did they say?
     def parse(message)
       puts "<< #{message.to_s.strip}"
