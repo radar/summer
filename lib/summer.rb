@@ -67,6 +67,7 @@ module Summer
     # Will join channels specified in configuration.
     def startup!
       @started = true
+      try(:did_start_up)
 
       if config['nickserv_password']
         privmsg("identify #{config['nickserv_password']}", "nickserv")
@@ -81,7 +82,6 @@ module Summer
     end
 
     def finalize_startup
-      try(:did_start_up)
       config[:channels] ||= []
       (config[:channels] << config[:channel]).compact.each do |channel|
         join(channel)
