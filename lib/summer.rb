@@ -4,6 +4,7 @@ require 'fileutils'
 require 'yaml'
 require 'active_support/hash_with_indifferent_access'
 require 'active_support/core_ext/object/try'
+require 'active_support/core_ext/object/blank'
 
 Dir[File.dirname(__FILE__) + '/ext/*.rb'].each { |f| require f }
 
